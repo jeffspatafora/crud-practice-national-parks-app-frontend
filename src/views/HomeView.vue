@@ -4,7 +4,8 @@ export default {
   data: function () {
     return {
       message: "Welcome to Vue.js!",
-      nationalParks: []
+      nationalParks: [],
+      newNationalParkParams: {}
     };
   },
   created: function () {
@@ -18,16 +19,9 @@ export default {
       })
     },
     createNationalPark: function () {
-      console.log("in create");
-      let newNationalParkParams = {
-        name: "Grand Canyon",
-        state: "Arizona",
-        size_square_miles: 1902,
-        date_founded: "02/26/1919",
-        map_image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/USA_Arizona_relief_location_map.svg/284px-USA_Arizona_relief_location_map.svg.png"
-      }
-      axios.post("/national_parks", newNationalParkParams).then(response => {
-        console.log(response.date);
+      axios.post("/national_parks", this.newNationalParkParams).then(response => {
+        console.log("adding new park", response);
+        this.nationalParks.push(response.data);
       })
     },
   },
@@ -38,14 +32,12 @@ export default {
   <div class="home">
     <h1>New National Parks</h1>
     <div>
-      <p>Name: <input type="text" /></p>
-      <p>State: <input type="text" /></p>
-      <p>Date Founded: <input type="text" /></p>
-      <p>Size in Square Miles: <input type="text" /></p>
-      <p>Map Image url: <input type="text" /></p>
+      <p>Name: <input type="text" v-model="newNationalParkParams.name" /></p>
+      <p>State: <input type="text" v-model="newNationalParkParams.state" /></p>
+      <p>Date Founded: <input type="text" v-model="newNationalParkParams.date_founded" /></p>
+      <p>Size in Square Miles: <input type="text" v-model="newNationalParkParams.size_square_miles" /></p>
+      <p>Map Image url: <input type="text" v-model="newNationalParkParams.map_image" /></p>
       <button v-on:click="createNationalPark()">add a new park</button>
-
-
     </div>
     <h1>All National Parks</h1>
     <div v-for="nationalPark in nationalParks" v-bind:key="nationalPark.id">
